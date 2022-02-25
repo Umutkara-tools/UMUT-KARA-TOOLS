@@ -49,37 +49,37 @@ if [[ $control == 0 ]];then
 	echo
 	exit
 fi
-if [[ -a $HOME/.UMUT-KARA-TOOLS ]];then
+if [[ -a $PREFIX/lib/UMUT-KARA-TOOLS ]];then
 	
-	control=$(cat $HOME/.UMUT-KARA-TOOLS/.git/config |grep url |awk -F '/' '{print $4}')
+	control=$(cat $PREFIX/lib/UMUT-KARA-TOOLS/.git/config |grep url |awk -F '/' '{print $4}')
 	
 	if [[ $control != $githubUsername ]];then
 		
 		rm -rf $HOME/.UMUT-KARA-TOOLS
 		
-		if [[ -a $PREFIX/bin/tools-umutkara ]];then
-			rm $PREFIX/bin/tools-umutkara
+		if [[ -a $PREFIX/bin/umutkaratools ]];then
+			rm $PREFIX/bin/umutkaratools
 		fi
 	fi	
 fi
-if [[ ! -a $PREFIX/bin/tools-umutkara ]];then
+if [[ ! -a $PREFIX/bin/umutkaratools ]];then
 	cd files
-	cp .tools-umutkara /data/data/com.termux/files/usr/bin/tools-umutkara
+	cp .tools-umutkara /data/data/com.termux/files/usr/bin/umutkaratools
 	cd ..
-	mkdir $HOME/.UMUT-KARA-TOOLS
-	mv * $HOME/.UMUT-KARA-TOOLS
-	mv .git $HOME/.UMUT-KARA-TOOLS
+	mkdir $PREFIX/lib/UMUT-KARA-TOOLS
+	mv * $PREFIX/lib/UMUT-KARA-TOOLS
+	mv .git $PREFIX/lib/UMUT-KARA-TOOLS
 	cd $HOME
 	repoName=$(cat .UMUT-KARA-TOOLS/.git/config |grep url |awk -F '/' '{print $5}')
 	if [[ -a $repoName ]];then
 		rm -rf $repoName
 	fi
-	chmod 777 /data/data/com.termux/files/usr/bin/tools-umutkara
-	chmod 777 $HOME/.UMUT-KARA-TOOLS/umut-kara-tools.sh
+	chmod 777 /data/data/com.termux/files/usr/bin/umutkaratools
+	chmod 777 $PREFIX/lib/UMUT-KARA-TOOLS/umut-kara-tools.sh
 	echo
 	echo
 	echo
-	printf "\e[32m[✓] tools-umutkara\e[0m KISAYOL OLUŞTURULDU"
+	printf "\e[32m[✓] umutkaratools\e[0m KISAYOL OLUŞTURULDU"
 	echo
 	echo
 	echo
@@ -109,7 +109,7 @@ done
 echo
 echo
 echo
-read -e -p $' \e[92mUmuTKaRa\e[97m@\e[92mtools\e[97m~\e[91m>> \e[0m' secim
+read -e -p $' \e[97m[ \e[92mUᴍᴜᴛKᴀRᴀTᴏᴏʟꜱ \e[97m]\e[92m ~ \e[91m»» \e[0m' secim
 if [[ $secim == x || $secim == X || $secim == exit ]];then
 	echo
 	echo
@@ -156,20 +156,39 @@ if [[ -n $1 ]];then
 	name=$(echo -e "$directory" |awk -F "/" "{print \$$total}")
 	directory_name="$name"
 fi
-close() {
-tool_name=$(sed -n $secim\p tools.txt)
-if [[ -a $HOME/$tool_name ]];then
-	cd $HOME/$tool_name
-	script_name=$(ls |grep .sh |sed -n 1p)
-	bash $script_name
-	exit
+
+toolName=$(sed -n $secim\p tools.txt)
+if [[ -a $HOME/$toolName ]];then
+	echo
+	echo
+	echo
+	printf "\e[31m[!]\e[97m $toolName ZATEN KAYITLI \e[31m!!!\e[97m"
+	echo
+	echo
+	echo
+	read -e -p $'TEKRAR İNDİRİLSİN Mİ ? [ \e[32mE\e[97m / \e[31mH\e[97m ] \e[31m>>\e[0m ' secenek
+	echo
+	echo
+	echo
+	if [[ $secenek == h || $secenek == H || $secenek == hayır || $secenek == HAYIR ]];then
+		echo
+		echo
+		echo
+		printf "\e[31m[!]\e[97m TEKRAR İNDİRME İPTAL EDİLDİ \e[31m!!!\e[97m"
+		echo
+		echo
+		echo
+		exit
+	
+	fi
+
 fi
-}
-printf "\e[32m[✓]\e[92m $(sed -n $secim\p tools.txt) \e[0m $directory_name DİZİNİNE İNDİRİLİYOR "
+
+printf "\e[32m[✓]\e[92m $toolName \e[0m $directory_name DİZİNİNE İNDİRİLİYOR "
 echo
 echo
 echo
-git clone https://github.com/$githubUsername/$(sed -n $secim\p tools.txt)
-mv $(sed -n $secim\p tools.txt) $directory
+git clone https://github.com/$githubUsername/$toolName
+mv $toolName $directory
 rm tools.txt
 
