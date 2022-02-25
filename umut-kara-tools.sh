@@ -49,7 +49,7 @@ if [[ $control == 0 ]];then
 	echo
 	exit
 fi
-if [[ ! -a $HOME/.UMUT-KARA-TOOLS ]];then
+if [[ -a $HOME/.UMUT-KARA-TOOLS ]];then
 	
 	control=$(cat $HOME/.UMUT-KARA-TOOLS/.git/config |grep url |awk -F '/' '{print $4}')
 	
