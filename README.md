@@ -4,7 +4,7 @@
 
 <div align="center" width="50">
 
-<img src="https://raw.githubusercontent.com/Umutkaratools/Umutkaratools/master/icon.png" alt="" width="200"/>
+<img src="https://raw.githubusercontent.com/Umutkara-tools/Umutkaratools/master/icon.png" alt="" width="200"/>
 <br>
 <hr>
 </div>
@@ -12,7 +12,7 @@
 
 <div align="center">
 
-<img align="center" src="https://github-readme-stats.vercel.app/api?username=umutkaratools&include_all_commits=true&count_private=true&show_icons=true&line_height=20&title_color=7A7ADB&icon_color=2234AE&text_color=D3D3D3&bg_color=0,000000,130F40" alt="Umutkaratools Github Status">
+<img align="center" src="https://github-readme-stats.vercel.app/api?username=umutkara-tools&include_all_commits=true&count_private=true&show_icons=true&line_height=20&title_color=7A7ADB&icon_color=2234AE&text_color=D3D3D3&bg_color=0,000000,130F40" alt="Umutkaratools Github Status">
 
 </br>
 </br>
