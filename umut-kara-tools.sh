@@ -69,7 +69,7 @@ if [[ ! -a $PREFIX/bin/tools-umutkara ]];then
 	mkdir $HOME/.UMUT-KARA-TOOLS
 	mv * $HOME/.UMUT-KARA-TOOLS
 	mv .git $HOME/.UMUT-KARA-TOOLS
-	cd ..
+	cd $HOME
 	repoName=$(cat .UMUT-KARA-TOOLS/.git/config |grep url |awk -F '/' '{print $5}')
 	if [[ -a $repoName ]];then
 		rm -rf $repoName
