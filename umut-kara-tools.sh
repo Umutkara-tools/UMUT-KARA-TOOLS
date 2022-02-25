@@ -149,16 +149,14 @@ echo
 echo
 directory="$HOME"
 directory_name='HOME'
+
 if [[ -n $1 ]];then
 	directory="$(cat .pwd)"
-	total=$(echo -e "$directory" |grep -o / |wc -l)
-	let total+=1
-	name=$(echo -e "$directory" |awk -F "/" "{print \$$total}")
-	directory_name="$name"
+	directory_name=$(basename $directory)
 fi
 
 toolName=$(sed -n $secim\p tools.txt)
-if [[ -a $HOME/$toolName ]];then
+if [[ -a $directory/$toolName ]];then
 	echo
 	echo
 	echo
@@ -181,7 +179,7 @@ if [[ -a $HOME/$toolName ]];then
 		exit
 	
 	fi
-
+	rm -rf $directory/$toolName
 fi
 
 printf "\e[32m[✓]\e[92m $toolName \e[0m $directory_name DİZİNİNE İNDİRİLİYOR "
