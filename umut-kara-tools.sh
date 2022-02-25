@@ -1,5 +1,8 @@
 #!/bin/bash
 clear
+
+githubUsername="umutkara-tools"
+
 if [[ $1 == update ]];then
 	cd files
 	bash update.sh update $2
@@ -46,6 +49,19 @@ if [[ $control == 0 ]];then
 	echo
 	exit
 fi
+if [[ ! -a $HOME/.UMUT-KARA-TOOLS ]];then
+	
+	control=$(cat $HOME/.UMUT-KARA-TOOLS/.git/config |grep url |awk -F '/' '{print $4}')
+	
+	if [[ $control != $githubUsername ]];then
+		
+		rm -rf $HOME/.UMUT-KARA-TOOLS
+		
+		if [[ -a $PREFIX/bin/tools-umutkara ]];then
+			rm $PREFIX/bin/tools-umutkara
+		fi
+	fi	
+fi
 if [[ ! -a $PREFIX/bin/tools-umutkara ]];then
 	cd files
 	cp .tools-umutkara /data/data/com.termux/files/usr/bin/tools-umutkara
@@ -54,7 +70,10 @@ if [[ ! -a $PREFIX/bin/tools-umutkara ]];then
 	mv * $HOME/.UMUT-KARA-TOOLS
 	mv .git $HOME/.UMUT-KARA-TOOLS
 	cd ..
-	rm -rf $(cat .UMUT-KARA-TOOLS/.git/config |grep url |awk -F '/' '{print $5}')
+	repoName=$(cat .UMUT-KARA-TOOLS/.git/config |grep url |awk -F '/' '{print $5}')
+	if [[ -a $repoName ]];then
+		rm -rf $repoName
+	fi
 	chmod 777 /data/data/com.termux/files/usr/bin/tools-umutkara
 	chmod 777 $HOME/.UMUT-KARA-TOOLS/umut-kara-tools.sh
 	echo
@@ -73,7 +92,7 @@ if [[ -a ../updates_infos ]];then
 	exit
 fi
 bash banner.sh
-curl -s "https://api.github.com/users/umutkara-tools/repos?per_page=100" | jq -r ".[].name" | xargs -L1 > tools.txt
+curl -s "https://api.github.com/users/$githubUsername/repos?per_page=100" | jq -r ".[].name" | xargs -L1 > tools.txt
 total=$(cat tools.txt |wc -l)
 color=$(cat .color.txt)
 for no in `seq 1 $total` ; do
@@ -150,7 +169,7 @@ printf "\e[32m[✓]\e[92m $(sed -n $secim\p tools.txt) \e[0m $directory_name Dİ
 echo
 echo
 echo
-git clone https://github.com/umutkara-tools/$(sed -n $secim\p tools.txt)
+git clone https://github.com/$githubUsername/$(sed -n $secim\p tools.txt)
 mv $(sed -n $secim\p tools.txt) $directory
 rm tools.txt
 
