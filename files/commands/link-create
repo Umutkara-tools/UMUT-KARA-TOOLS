@@ -35,7 +35,7 @@ if [[ ! -a $PREFIX/bin/ngrok ]];then
 	echo
 	echo
 	echo
-	git clone https://github.com/umutkaratools/ngrok-kurulum
+	git clone https://github.com/umutkara-tools/ngrok-kurulum
 	cd ngrok-kurulum
 	bash ngrok-kurulum.sh
 	cd ..
