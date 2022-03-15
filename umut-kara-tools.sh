@@ -199,7 +199,7 @@ if [[ -a $directory/$toolName ]];then
 	rm -rf $directory/$toolName
 fi
 
-printf "\e[32m[✓]\e[92m $toolName \e[0m $directory_name DİZİNİNE İNDİRİLİYOR "
+printf "\e[32m[✓]\e[92m $toolName \e[33m $directory_name \e[97mDİZİNİNE İNDİRİLİYOR "
 echo
 echo
 echo
